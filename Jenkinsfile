@@ -182,27 +182,54 @@ pipeline {
     //         }
     //     }
     // }
-            stage('Upload Results to Github') {
-            environment {
-                CODEQL_PATH = "$WORKSPACE/build/codeql"
-            }
+        //     stage('Upload Results to Github') {
+        //     environment {
+        //         CODEQL_PATH = "$WORKSPACE/build/codeql"
+        //     }
 
-            steps {
-                script {
-                    def resultFiles = findFiles(glob: '**/*.sarif')
+        //     steps {
+        //         script {
+        //             def resultFiles = findFiles(glob: '**/*.sarif')
                     
-                    for (resultFile in resultFiles) {
-                        def command = "${CODEQL_PATH}/codeql github upload-results " +
-                                    "--repository=KaranChadha10/codeql-analysis " +
-                                    "--ref=refs/heads/master " +
-                                    "--commit=${GIT_COMMIT} " +
-                                    "--sarif=${resultFile}"
+        //             for (resultFile in resultFiles) {
+        //                 def command = "${CODEQL_PATH}/codeql github upload-results " +
+        //                             "--repository=KaranChadha10/codeql-analysis " +
+        //                             "--ref=refs/heads/master " +
+        //                             "--commit=${GIT_COMMIT} " +
+        //                             "--sarif=${resultFile}"
                         
-                        bat(command)
-                    }
+        //                 bat(command)
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('Upload Results to Github') {
+    environment {
+        CODEQL_PATH = "$WORKSPACE/build/codeql"
+    }
+
+    steps {
+        script {
+            def resultFiles = findFiles(glob: '**/*.sarif')
+            
+            if (!resultFiles.empty) {
+                resultFiles.each { resultFile ->
+                    def command = "${CODEQL_PATH}/codeql github upload-results " +
+                                  "--repository=KaranChadha10/codeql-analysis " +
+                                  "--ref=refs/heads/master " +
+                                  "--commit=${GIT_COMMIT} " +
+                                  "--sarif=${resultFile}"
+
+                    bat(command)
                 }
+            } else {
+                echo "No SARIF files found."
             }
         }
+    }
+}
+
 
 
     }
