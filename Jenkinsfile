@@ -233,11 +233,13 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE/build/codeql"
+        echo CODEQL_PATH
     }
 
     steps {
         script {
             def resultFiles = sh(script: 'find $WORKSPACE -name "*.sarif"', returnStdout: true).trim().split('\n')
+            echo resultFiles
             
             if (resultFiles.size() > 0) {
                 resultFiles.each { resultFile ->
