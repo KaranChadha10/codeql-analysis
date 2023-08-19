@@ -47,18 +47,37 @@ pipeline {
         //         codeql(codeqlConfig: 'MyCodeQLDatabase', sarifPattern: 'codeql-results.sarif')
         //     }
         // }
-        stage('Publish CodeQL Results') {
-            steps {
-                // Publish CodeQL analysis results using the CodeQL plugin
-                recordIssues(
-                    tools: [
-                        codeQL(
-                            pattern: 'codeql-results.sarif', 
-                            reportEncoding: 'UTF-8'
-                        )
-                    ]
-                )
+        // stage('Publish CodeQL Results') {
+        //     steps {
+        //         // Publish CodeQL analysis results using the CodeQL plugin
+        //         recordIssues(
+        //             tools: [
+        //                 codeQL(
+        //                     pattern: 'codeql-results.sarif', 
+        //                     reportEncoding: 'UTF-8'
+        //                 )
+        //             ]
+        //         )
+        //     }
+        // } 
+        stage('Upload Results to Github') {
+            environment {
+                CODEQL_PATH = "$WORKSPACE/build/codeql"
             }
-        }      
+            steps {
+                dir("build") {
+                    sh """
+                        for result_file in *.sarif
+                        do
+                            $CODEQL_PATH/codeql github upload-results \\
+                                --repository=KaranChadha10/codeql-analysis \\
+                                --ref="refs/heads/master" \\
+                                --commit=${GIT_COMMIT} \\
+                                --sarif=\${result_file}
+                        done
+                    """
+                }
+            }
+        }     
     }
 }
