@@ -7,5 +7,10 @@ pipeline {
                 echo 'Hello world'
             }
         }
+        stage('Codeql Analysis') {
+            steps {
+                echo 'Entering Codeql Analysis'
+            }
+        }
     }
 }
