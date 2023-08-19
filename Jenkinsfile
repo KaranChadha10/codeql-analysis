@@ -204,16 +204,42 @@ pipeline {
         //     }
         // }
 
-        stage('Upload Results to Github') {
+//         stage('Upload Results to Github') {
+//     environment {
+//         CODEQL_PATH = "$WORKSPACE/build/codeql"
+//     }
+
+//     steps {
+//         script {
+//             def resultFiles = findFiles(glob: '**/*.sarif')
+            
+//             if (!resultFiles.empty) {
+//                 resultFiles.each { resultFile ->
+//                     def command = "${CODEQL_PATH}/codeql github upload-results " +
+//                                   "--repository=KaranChadha10/codeql-analysis " +
+//                                   "--ref=refs/heads/master " +
+//                                   "--commit=${GIT_COMMIT} " +
+//                                   "--sarif=${resultFile}"
+
+//                     bat(command)
+//                 }
+//             } else {
+//                 echo "No SARIF files found."
+//             }
+//         }
+//     }
+// }
+
+stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE/build/codeql"
     }
 
     steps {
         script {
-            def resultFiles = findFiles(glob: '**/*.sarif')
+            def resultFiles = sh(script: 'find $WORKSPACE -name "*.sarif"', returnStdout: true).trim().split('\n')
             
-            if (!resultFiles.empty) {
+            if (resultFiles.size() > 0) {
                 resultFiles.each { resultFile ->
                     def command = "${CODEQL_PATH}/codeql github upload-results " +
                                   "--repository=KaranChadha10/codeql-analysis " +
@@ -229,6 +255,7 @@ pipeline {
         }
     }
 }
+
 
 
 
