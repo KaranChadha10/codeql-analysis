@@ -232,7 +232,7 @@ pipeline {
 
 stage('Upload Results to Github') {
     environment {
-        CODEQL_PATH = "$WORKSPACE/build/codeql"
+        CODEQL_PATH = "$WORKSPACE"
     }
 
     steps {
