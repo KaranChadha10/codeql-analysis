@@ -233,11 +233,11 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE/build/codeql"
-        echo CODEQL_PATH
     }
 
     steps {
         script {
+            echo "CODEQL_PATH: ${env.CODEQL_PATH}" // Print the CODEQL_PATH variable
             def resultFiles = sh(script: 'find $WORKSPACE -name "*.sarif"', returnStdout: true).trim().split('\n')
             echo resultFiles
             
@@ -248,6 +248,7 @@ stage('Upload Results to Github') {
                                   "--ref=refs/heads/master " +
                                   "--commit=${GIT_COMMIT} " +
                                   "--sarif=${resultFile}"
+                    echo command
 
                     bat(command)
                 }
