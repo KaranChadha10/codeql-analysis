@@ -233,6 +233,7 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
+        GITHUB_TOKEN = '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' // Replace with your actual GitHub token
     }
 
     steps {
@@ -245,7 +246,8 @@ stage('Upload Results to Github') {
                               "--repository=KaranChadha10/codeql-analysis " +
                               "--ref=refs/heads/master " +
                               "--commit=${GIT_COMMIT} " +
-                              "--sarif=${sarifFile}"
+                              "--sarif=${sarifFile} " +
+                              "--github-auth=${GITHUB_TOKEN}"
                 echo "Executing command: ${command}"
 
                 bat(command)
