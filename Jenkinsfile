@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     def codeqlExecutable = 'C:\\codeql\\codeql' // Use the correct path to your CodeQL CLI executable
-                    def databaseName = 'MyCodeQLDatabase'
+                    def databaseName = 'MyCodeQLDB'
 
                     // Create and analyze CodeQL database
                     bat "${codeqlExecutable} database create --language=javascript ${databaseName}"
