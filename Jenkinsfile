@@ -22,12 +22,27 @@ pipeline {
         //     }
         // }
         stage('Checkout') {
-        steps {
-            // Checkout code from Git
-            checkout([$class: 'GitSCM',
-                      branches: [[name: '*/master']], // Use 'master' for the main branch
-                      userRemoteConfigs: [[url: 'https://github.com/KaranChadha10/codeql-analysis.git']]])
+            steps {
+                // Checkout code from Git
+                checkout([$class: 'GitSCM',
+                        branches: [[name: '*/master']], // Use 'master' for the main branch
+                        userRemoteConfigs: [[url: 'https://github.com/KaranChadha10/codeql-analysis.git']]])
+            }
         }
-    }
+        stage('CodeQL') {
+            steps {
+                script {
+                    def codeqlExecutable = 'C:\\codeql\\codeql' // Use the correct path to your CodeQL CLI executable
+                    def databaseName = 'MyCodeQLDatabase'
+
+                    // Create and analyze CodeQL database
+                    bat "${codeqlExecutable} database create --language=javascript ${databaseName}"
+                    bat "${codeqlExecutable} database analyze ${databaseName}"
+
+                    // Export results in SARIF format
+                    bat "${codeqlExecutable} database export sarif --output=codeql-results.sarif ${databaseName}"
+                }
+            }
+        }
     }
 }
