@@ -241,7 +241,7 @@ stage('Upload Results to Github') {
             def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
             if (fileExists(sarifFile)) {
-                def command = "${CODEQL_PATH}/build/codeql github upload-results " +
+                def command = "${CODEQL_PATH} github upload-results " +
                               "--repository=KaranChadha10/codeql-analysis " +
                               "--ref=refs/heads/master " +
                               "--commit=${GIT_COMMIT} " +
