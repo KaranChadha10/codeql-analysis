@@ -60,24 +60,70 @@ pipeline {
         //         )
         //     }
         // } 
-        stage('Upload Results to Github') {
-            environment {
-                CODEQL_PATH = "$WORKSPACE/build/codeql"
-            }
-            steps {
-                dir("build") {
-                    sh """
-                        for result_file in *.sarif
-                        do
-                            $CODEQL_PATH/codeql github upload-results \\
-                                --repository=KaranChadha10/codeql-analysis \\
-                                --ref="refs/heads/master" \\
-                                --commit=${GIT_COMMIT} \\
-                                --sarif=\${result_file}
-                        done
-                    """
-                }
-            }
-        }     
+        // stage('Upload Results to Github') {
+        //     environment {
+        //         CODEQL_PATH = "$WORKSPACE/build/codeql"
+        //     }
+        //     steps {
+        //         dir("build") {
+        //             sh """
+        //                 for result_file in *.sarif
+        //                 do
+        //                     $CODEQL_PATH/codeql github upload-results \\
+        //                         --repository=KaranChadha10/codeql-analysis \\
+        //                         --ref="refs/heads/master" \\
+        //                         --commit=${GIT_COMMIT} \\
+        //                         --sarif=\${result_file}
+        //                 done
+        //             """
+        //         }
+        //     }
+        // }
+//         stage('Upload Results to Github') {
+//     environment {
+//         CODEQL_PATH = "$WORKSPACE/build/codeql"
+//     }
+
+//     steps {
+//         dir("build") {
+//             withCredentials([usernamePassword(credentialsId: env.JCI_GHEMU_CRED,
+//                                               usernameVariable: 'GHUSER',
+//                                               passwordVariable: 'GHTOKEN')]) {
+//                 bat """
+//                     for %%result_file in (*.sarif) do (
+//                         echo %GHTOKEN% | ^
+//                           %CODEQL_PATH%/codeql github upload-results ^
+//                             --repository=KaranChadha10/codeql-analysis ^
+//                             --ref="refs/heads/master" ^
+//                             --commit=%GIT_COMMIT% ^
+//                             --sarif=%%result_file
+//                     )
+//                 """
+//             }
+//         }
+//     }
+// }
+
+stage('Upload Results to Github') {
+    environment {
+        CODEQL_PATH = "$WORKSPACE/build/codeql"
+    }
+
+    steps {
+        dir("build") {
+            bat """
+                for %%result_file in (*.sarif) do (
+                    %CODEQL_PATH%/codeql github upload-results ^
+                        --repository=KaranChadha10/codeql-analysis ^
+                        --ref="refs/heads/master" ^
+                        --commit=%GIT_COMMIT% ^
+                        --sarif=%%result_file
+                )
+            """
+        }
+    }
+}
+
+     
     }
 }
