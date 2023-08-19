@@ -41,11 +41,24 @@ pipeline {
                 }
             }
         }
+        // stage('Publish CodeQL Results') {
+        //     steps {
+        //         // Publish CodeQL analysis results using the CodeQL plugin
+        //         codeql(codeqlConfig: 'MyCodeQLDatabase', sarifPattern: 'codeql-results.sarif')
+        //     }
+        // }
         stage('Publish CodeQL Results') {
             steps {
                 // Publish CodeQL analysis results using the CodeQL plugin
-                codeql(codeqlConfig: 'MyCodeQLDatabase', sarifPattern: 'codeql-results.sarif')
+                recordIssues(
+                    tools: [
+                        codeQL(
+                            pattern: 'codeql-results.sarif', 
+                            reportEncoding: 'UTF-8'
+                        )
+                    ]
+                )
             }
-        }   
+        }      
     }
 }
