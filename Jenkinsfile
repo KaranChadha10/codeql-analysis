@@ -33,11 +33,11 @@ pipeline {
             steps {
                 script {
                     def codeqlExecutable = 'C:\\codeql\\codeql' // Use the correct path to your CodeQL CLI executable
-                    def databaseName = 'MyCodeQLDB'
+                    def databaseName = 'MyCodeQLDatabase'
 
                     // Create and analyze CodeQL database
-                    bat "${codeqlExecutable} database create --language=javascript ${databaseName}"
-                    bat "${codeqlExecutable} database analyze --format=csv --output=codeql-results.csv ${databaseName}" // Add format and output options
+                    bat "${codeqlExecutable} database create --language=javascript --overwrite ${databaseName}" // Add --overwrite flag
+                    bat "${codeqlExecutable} database analyze --format=csv --output=codeql-results.csv ${databaseName}"
 
                     // Export results in SARIF format
                     bat "${codeqlExecutable} database export sarif --output=codeql-results.sarif ${databaseName}"
