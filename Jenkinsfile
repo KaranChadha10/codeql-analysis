@@ -40,6 +40,12 @@ pipeline {
                     bat "${codeqlExecutable} database analyze --format=sarif-latest --output=codeql-results.sarif ${databaseName}"
                 }
             }
+        }
+        stage('Publish CodeQL Results') {
+            steps {
+                // Publish CodeQL analysis results using the CodeQL plugin
+                codeql(codeqlConfig: 'MyCodeQLDatabase', sarifPattern: 'codeql-results.sarif')
+            }
         }   
     }
 }
