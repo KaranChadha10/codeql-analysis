@@ -238,23 +238,19 @@ stage('Upload Results to Github') {
     steps {
         script {
             echo "CODEQL_PATH: ${env.CODEQL_PATH}" // Print the CODEQL_PATH variable
-            // def resultFiles = sh(script: 'find $WORKSPACE -name "*.sarif"', returnStdout: true).trim().split('\n')
-            def resultFiles = findFiles(glob: '**/*.sarif')
-            echo resultFiles
+            def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
-            if (resultFiles.size() > 0) {
-                resultFiles.each { resultFile ->
-                    def command = "${CODEQL_PATH}/codeql github upload-results " +
-                                  "--repository=KaranChadha10/codeql-analysis " +
-                                  "--ref=refs/heads/master " +
-                                  "--commit=${GIT_COMMIT} " +
-                                  "--sarif=${resultFile}"
-                    echo command
+            if (fileExists(sarifFile)) {
+                def command = "${CODEQL_PATH}/build/codeql github upload-results " +
+                              "--repository=KaranChadha10/codeql-analysis " +
+                              "--ref=refs/heads/master " +
+                              "--commit=${GIT_COMMIT} " +
+                              "--sarif=${sarifFile}"
+                echo command
 
-                    bat(command)
-                }
+                bat(command)
             } else {
-                echo "No SARIF files found."
+                echo "SARIF file not found."
             }
         }
     }
