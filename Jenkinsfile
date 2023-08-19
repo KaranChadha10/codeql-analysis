@@ -246,9 +246,10 @@ stage('Upload Results to Github') {
                               "--repository=KaranChadha10/codeql-analysis " +
                               "--ref=refs/heads/master " +
                               "--commit=${GIT_COMMIT} " +
-                              "--sarif=${sarifFile} " +
-                              "--github-auth=${GITHUB_TOKEN}"
-                echo "Executing command: ${command}"
+                              "--sarif=${sarifFile}"
+
+                // Set the GITHUB_TOKEN environment variable before executing the command
+                env.GITHUB_TOKEN = credentials('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')
 
                 bat(command)
             } else {
