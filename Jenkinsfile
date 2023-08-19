@@ -104,25 +104,46 @@ pipeline {
 //     }
 // }
 
-stage('Upload Results to Github') {
-    environment {
-        CODEQL_PATH = "$WORKSPACE/build/codeql"
-    }
+// stage('Upload Results to Github') {
+//     environment {
+//         CODEQL_PATH = "$WORKSPACE/build/codeql"
+//     }
 
-    steps {
-        dir("build") {
-            bat """
-                for %%result_file in (*.sarif) do (
-                    %CODEQL_PATH%/codeql github upload-results ^
-                        --repository=KaranChadha10/codeql-analysis ^
-                        --ref="refs/heads/master" ^
-                        --commit=%GIT_COMMIT% ^
-                        --sarif=%%result_file
-                )
-            """
+//     steps {
+//         dir("build") {
+//             bat """
+//                 for %%result_file in (*.sarif) do (
+//                     %CODEQL_PATH%/codeql github upload-results ^
+//                         --repository=KaranChadha10/codeql-analysis ^
+//                         --ref="refs/heads/master" ^
+//                         --commit=%GIT_COMMIT% ^
+//                         --sarif=%%result_file
+//                 )
+//             """
+//         }
+//     }
+// }
+
+        stage('Upload Results to Github') {
+        environment {
+            CODEQL_PATH = "$WORKSPACE/build/codeql"
+        }
+
+        steps {
+            dir("build") {
+                bat """
+                    for %%result_file in (*.sarif) do (
+                        %CODEQL_PATH%/codeql github upload-results ^
+                            --repository=KaranChadha10/codeql-analysis ^
+                            --ref="refs/heads/master" ^
+                            --commit=%GIT_COMMIT% ^
+                            --sarif=%%result_file
+                    )
+                """
+            }
         }
     }
-}
+
 
      
     }
