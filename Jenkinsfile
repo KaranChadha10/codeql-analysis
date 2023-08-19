@@ -238,7 +238,8 @@ stage('Upload Results to Github') {
     steps {
         script {
             echo "CODEQL_PATH: ${env.CODEQL_PATH}" // Print the CODEQL_PATH variable
-            def resultFiles = sh(script: 'find $WORKSPACE -name "*.sarif"', returnStdout: true).trim().split('\n')
+            // def resultFiles = sh(script: 'find $WORKSPACE -name "*.sarif"', returnStdout: true).trim().split('\n')
+            def resultFiles = findFiles(glob: '**/*.sarif')
             echo resultFiles
             
             if (resultFiles.size() > 0) {
