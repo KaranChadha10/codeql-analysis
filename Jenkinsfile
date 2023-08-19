@@ -135,28 +135,53 @@ pipeline {
     //     }
     // }
 
-            stage('Upload Results to Github') {
-            environment {
-                CODEQL_PATH = "$WORKSPACE/build/codeql"
-            }
+        //     stage('Upload Results to Github') {
+        //     environment {
+        //         CODEQL_PATH = "$WORKSPACE/build/codeql"
+        //     }
 
-            steps {
-                dir("build") {
-                    script {
-                        def resultFiles = findFiles(glob: '*.sarif')
+        //     steps {
+        //         dir("build") {
+        //             script {
+        //                 def resultFiles = findFiles(glob: '*.sarif')
 
-                        for (resultFile in resultFiles) {
-                            def command = "${CODEQL_PATH}/codeql github upload-results " +
-                                        "--repository=KaranChadha10/codeql-analysis " +
-                                        "--ref=refs/heads/master " +
-                                        "--commit=${GIT_COMMIT} " +
-                                        "--sarif=${resultFile.getName()}"
+        //                 for (resultFile in resultFiles) {
+        //                     def command = "${CODEQL_PATH}/codeql github upload-results " +
+        //                                 "--repository=KaranChadha10/codeql-analysis " +
+        //                                 "--ref=refs/heads/master " +
+        //                                 "--commit=${GIT_COMMIT} " +
+        //                                 "--sarif=${resultFile.getName()}"
                             
-                            bat(command)
-                        }
+        //                     bat(command)
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+            stage('Upload Results to Github') {
+        environment {
+            CODEQL_PATH = "$WORKSPACE/build/codeql"
+        }
+
+        steps {
+            dir("build") {
+                script {
+                    def resultFiles = bat(script: 'dir /B *.sarif', returnStatus: true).trim()
+                    def filesList = resultFiles.split('\r\n')
+
+                    for (resultFile in filesList) {
+                        def command = "${CODEQL_PATH}/codeql github upload-results " +
+                                    "--repository=KaranChadha10/codeql-analysis " +
+                                    "--ref=refs/heads/master " +
+                                    "--commit=${GIT_COMMIT} " +
+                                    "--sarif=${resultFile}"
+                        
+                        bat(command)
                     }
                 }
             }
         }
+    }
+
     }
 }
