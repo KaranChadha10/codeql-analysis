@@ -38,9 +38,6 @@ pipeline {
                     // Create and analyze CodeQL database
                     bat "${codeqlExecutable} database create --language=javascript --overwrite ${databaseName}" // Add --overwrite flag
                     bat "${codeqlExecutable} database analyze --format=sarif-latest --output=codeql-results.sarif ${databaseName}"
-
-                    // Export results in SARIF format
-                    bat "${codeqlExecutable} database export sarif --output=codeql-results.sarif ${databaseName}"
                 }
             }
         }   
