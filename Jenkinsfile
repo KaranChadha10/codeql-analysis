@@ -252,6 +252,7 @@ stage('Upload Results to Github') {
                         withCredentials([
                             string(credentialsId: 'github-pat', variable: 'GITHUB_TOKEN')
                         ]) {
+                            echo "Using token: ${GITHUB_TOKEN}"
                             bat(
                                 script: command,
                                 env: [
