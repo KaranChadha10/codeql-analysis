@@ -233,7 +233,7 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
-        GITHUB_TOKEN = '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' // Replace with your actual GitHub token
+        // GITHUB_TOKEN = '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' // Replace with your actual GitHub token
     }
 
     steps {
@@ -248,10 +248,17 @@ stage('Upload Results to Github') {
                               "--commit=${GIT_COMMIT} " +
                               "--sarif=${sarifFile}"
 
-                // Set the GITHUB_TOKEN environment variable before executing the command
-                env.GITHUB_TOKEN = credentials('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')
-
-                bat(command)
+                // Use the withCredentials block to securely set the GITHUB_TOKEN environment variable
+                withCredentials([
+                    string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')
+                ]) {
+                    bat(
+                        script: command,
+                        env: [
+                            GITHUB_TOKEN: GITHUB_TOKEN
+                        ]
+                    )
+                }
             } else {
                 echo "SARIF file not found."
             }
