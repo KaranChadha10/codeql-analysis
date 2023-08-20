@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        GITHUB_PAT = credentials('79398670-cec4-459c-b840-720e7564d7b9')
+    }
 
     stages {
         stage('Hello World') {
@@ -17,7 +20,8 @@ pipeline {
                 // Checkout code from Git
                 checkout([$class: 'GitSCM',
                         branches: [[name: '*/master']], // Use 'master' for the main branch
-                        userRemoteConfigs: [[url: 'https://github.com/KaranChadha10/codeql-analysis.git']]])
+                        userRemoteConfigs: [[credentialsId: env.GITHUB_PAT,
+                                            url: 'https://github.com/KaranChadha10/codeql-analysis.git']]])
             }
         }
         stage('CodeQL') {
@@ -233,7 +237,7 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
-        GITHUB_TOKEN = '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' // Replace with your actual GitHub token
+        // GITHUB_TOKEN = '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' // Replace with your actual GitHub token
     }
 
     steps {
@@ -250,7 +254,7 @@ stage('Upload Results to Github') {
 
                         // Use the withCredentials block to securely set the GITHUB_TOKEN environment variable
                         withCredentials([
-                            string(credentialsId: 'github-pat', variable: 'GITHUB_TOKEN')
+                            string(credentialsId: 'GITHUB_PAT', variable: 'GITHUB_TOKEN')
                         ]) {
                             echo "Using token: ${GITHUB_TOKEN}"
                             bat(
