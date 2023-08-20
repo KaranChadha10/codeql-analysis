@@ -237,33 +237,33 @@ stage('Upload Results to Github') {
     }
 
     steps {
-        script {
-            echo "CODEQL_PATH: ${env.CODEQL_PATH}" // Print the CODEQL_PATH variable
-            def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
-            
-            if (fileExists(sarifFile)) {
-                def command = "codeql github upload-results " +
-                              "--repository=KaranChadha10/codeql-analysis " +
-                              "--ref=refs/heads/master " +
-                              "--commit=${GIT_COMMIT} " +
-                              "--sarif=${sarifFile}"
+                script {
+                    echo "CODEQL_PATH: ${env.CODEQL_PATH}" // Print the CODEQL_PATH variable
+                    def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
+                    
+                    if (fileExists(sarifFile)) {
+                        def command = "codeql github upload-results " +
+                                    "--repository=KaranChadha10/codeql-analysis " +
+                                    "--ref=refs/heads/master " +
+                                    "--commit=${GIT_COMMIT} " +
+                                    "--sarif=${sarifFile}"
 
-                // Use the withCredentials block to securely set the GITHUB_TOKEN environment variable
-                withCredentials([
-                    string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')
-                ]) {
-                    bat(
-                        script: command,
-                        env: [
-                            GITHUB_TOKEN: GITHUB_TOKEN
-                        ]
-                    )
+                        // Use the withCredentials block to securely set the GITHUB_TOKEN environment variable
+                        withCredentials([
+                            string(credentialsId: 'github-pat', variable: 'GITHUB_TOKEN')
+                        ]) {
+                            bat(
+                                script: command,
+                                env: [
+                                    GITHUB_TOKEN: GITHUB_TOKEN
+                                ]
+                            )
+                        }
+                    } else {
+                        echo "SARIF file not found."
+                    }
                 }
-            } else {
-                echo "SARIF file not found."
             }
-        }
-    }
 }
 
 
