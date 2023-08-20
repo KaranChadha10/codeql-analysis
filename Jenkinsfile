@@ -233,7 +233,7 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
-        // GITHUB_TOKEN = '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' // Replace with your actual GitHub token
+        GITHUB_TOKEN = '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' // Replace with your actual GitHub token
     }
 
     steps {
