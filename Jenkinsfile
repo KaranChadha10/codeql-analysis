@@ -238,6 +238,9 @@ stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
         GH_USERNAME = "KaranChadha10"
+        REPO_OWNER = "KaranChadha10"  // Replace with the actual repository owner's name
+        REPO_NAME = "codeql-analysis"
+        BRANCH_TO_SCAN = "master"
     }
 
     steps {
