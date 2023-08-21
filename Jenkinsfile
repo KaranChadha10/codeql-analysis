@@ -238,7 +238,6 @@ stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
         GH_USERNAME = "KaranChadha10"
-        GH_TOKEN = "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"
     }
 
     steps {
@@ -247,21 +246,21 @@ stage('Upload Results to Github') {
             def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
             if (fileExists(sarifFile)) {
-                def command = "codeql github upload-results " +
-                              "--repository=KaranChadha10/codeql-analysis " +
-                              "--ref=refs/heads/master " +
+                echo "SARIF file found."
+                
+                def command = "${CODEQL_PATH}/codeql github upload-results " +
+                              "--repository=${REPO_OWNER}/${REPO_NAME} " +
+                              "--ref=refs/heads/${BRANCH_TO_SCAN} " +
                               "--commit=${GIT_COMMIT} " +
                               "--sarif=${sarifFile}"
-
+                
                 withCredentials([
                     usernamePassword(credentialsId: 'POC_token', 
                                     usernameVariable: 'GH_USERNAME', 
                                     passwordVariable: 'GH_TOKEN')
                 ]) {
                     echo "Using username: ${GH_USERNAME}"
-                    echo "Using token: ${GH_TOKEN}"
                     
-                    // Pass environment variables to the withEnv block
                     withEnv(["GITHUB_USERNAME=${GH_USERNAME}", 
                              "GITHUB_TOKEN=${GH_TOKEN}"]) {
                         bat(script: command)
@@ -273,6 +272,7 @@ stage('Upload Results to Github') {
         }
     }
 }
+
 
 
 
