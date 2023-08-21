@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GITHUB_PAT = 'POC_token'
+        GITHUB_PAT = credentials('POC_token')
     }
 
     stages {
@@ -254,7 +254,7 @@ stage('Upload Results to Github') {
                               "--sarif=${sarifFile}"
 
                 withCredentials([
-                    usernamePassword(credentialsId: 'POC_token', 
+                    usernamePassword(credentialsId: env.GITHUB_PAT, 
                                     usernameVariable: 'GH_USERNAME', 
                                     passwordVariable: 'GH_TOKEN')
                 ]) {
