@@ -237,12 +237,13 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
-        // GITHUB_TOKEN = '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' // Replace with your actual GitHub token
+        GH_USERNAME = "KaranChadha10"
+        GH_PASSWORD = "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"
     }
 
     steps {
                 script {
-                    echo "CODEQL_PATH: ${env.CODEQL_PATH}" // Print the CODEQL_PATH variable
+                    echo "CODEQL_PATH: ${env.CODEQL_PATH}" 
                     def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
                     
                     if (fileExists(sarifFile)) {
@@ -254,14 +255,18 @@ stage('Upload Results to Github') {
 
                         // Use the withCredentials block to securely set the GITHUB_TOKEN environment variable
                         withCredentials([
-                            string(credentialsId: 'pat_21/08' , variable: 'GITHUB_TOKEN')
+                             usernamePassword(credentialsId: 'POC_token', 
+                                    usernameVariable: GH_USERNAME, 
+                                    passwordVariable: GH_PASSWORD)
                         ]) {
-                            echo "Using token: ${GITHUB_TOKEN}"
+                            echo "Using username: ${GH_USERNAME}"
+                            echo "Using token: ${GH_PASSWORD}"
                             bat(
                                 script: command,
                                 env: [
-                                    GITHUB_TOKEN: GITHUB_TOKEN
-                                ]
+                                    GITHUB_USERNAME: GH_USERNAME,
+                                    GITHUB_TOKEN: GH_PASSWORD
+                        ]
                             )
                         }
                     } else {
