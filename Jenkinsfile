@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GITHUB_PAT = credentials('79398670-cec4-459c-b840-720e7564d7b9')
+        GITHUB_PAT = credentials('pat_21/08')
     }
 
     stages {
