@@ -238,7 +238,7 @@ stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
         GH_USERNAME = "KaranChadha10"
-        GH_PASSWORD = "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"
+        GH_TOKEN = "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"
     }
 
     steps {
@@ -256,14 +256,14 @@ stage('Upload Results to Github') {
                 withCredentials([
                     usernamePassword(credentialsId: 'POC_token', 
                                     usernameVariable: 'GH_USERNAME', 
-                                    passwordVariable: 'GH_PASSWORD')
+                                    passwordVariable: 'GH_TOKEN')
                 ]) {
                     echo "Using username: ${GH_USERNAME}"
-                    echo "Using token: ${GH_PASSWORD}"
+                    echo "Using token: ${GH_TOKEN}"
                     
                     // Pass environment variables to the withEnv block
                     withEnv(["GITHUB_USERNAME=${GH_USERNAME}", 
-                             "GITHUB_TOKEN=${GH_PASSWORD}"]) {
+                             "GITHUB_TOKEN=${GH_TOKEN}"]) {
                         bat(script: command)
                     }
                 }
