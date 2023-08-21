@@ -242,39 +242,38 @@ stage('Upload Results to Github') {
     }
 
     steps {
-                script {
-                    echo "CODEQL_PATH: ${env.CODEQL_PATH}" 
-                    def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
-                    
-                    if (fileExists(sarifFile)) {
-                        def command = "codeql github upload-results " +
-                                    "--repository=KaranChadha10/codeql-analysis " +
-                                    "--ref=refs/heads/master " +
-                                    "--commit=${GIT_COMMIT} " +
-                                    "--sarif=${sarifFile}"
+        script {
+            echo "CODEQL_PATH: ${env.CODEQL_PATH}" 
+            def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
+            
+            if (fileExists(sarifFile)) {
+                def command = "codeql github upload-results " +
+                              "--repository=KaranChadha10/codeql-analysis " +
+                              "--ref=refs/heads/master " +
+                              "--commit=${GIT_COMMIT} " +
+                              "--sarif=${sarifFile}"
 
-                        // Use the withCredentials block to securely set the GITHUB_TOKEN environment variable
-                        withCredentials([
-                             usernamePassword(credentialsId: 'POC_token', 
-                                    usernameVariable: GH_USERNAME, 
-                                    passwordVariable: GH_PASSWORD)
-                        ]) {
-                            echo "Using username: ${GH_USERNAME}"
-                            echo "Using token: ${GH_PASSWORD}"
-                            bat(
-                                script: command,
-                                env: [
-                                    GITHUB_USERNAME: GH_USERNAME,
-                                    GITHUB_TOKEN: GH_PASSWORD
-                        ]
-                            )
-                        }
-                    } else {
-                        echo "SARIF file not found."
+                withCredentials([
+                    usernamePassword(credentialsId: 'POC_token', 
+                                    usernameVariable: 'GH_USERNAME', 
+                                    passwordVariable: 'GH_PASSWORD')
+                ]) {
+                    echo "Using username: ${GH_USERNAME}"
+                    echo "Using token: ${GH_PASSWORD}"
+                    
+                    // Pass environment variables to the withEnv block
+                    withEnv(["GITHUB_USERNAME=${GH_USERNAME}", 
+                             "GITHUB_TOKEN=${GH_PASSWORD}"]) {
+                        bat(script: command)
                     }
                 }
+            } else {
+                echo "SARIF file not found."
             }
+        }
+    }
 }
+
 
 
 
