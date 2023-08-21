@@ -238,7 +238,7 @@ stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
         GH_USERNAME = "KaranChadha10"
-        GH_TOKEN = "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"
+        GH_TOKEN = "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"
         // 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
     }
 
