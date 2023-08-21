@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GITHUB_PAT = credentials('POC_token')
+        GITHUB_PAT = 'POC_token'
     }
 
     stages {
