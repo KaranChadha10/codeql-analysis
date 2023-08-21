@@ -254,7 +254,7 @@ stage('Upload Results to Github') {
 
                         // Use the withCredentials block to securely set the GITHUB_TOKEN environment variable
                         withCredentials([
-                            string(credentialsId: '733d065d-880a-4ddf-b34a-1e7e6e51bef7' , variable: 'GITHUB_TOKEN')
+                            string(credentialsId: 'github-pat', variable: 'GITHUB_TOKEN')
                         ]) {
                             echo "Using token: ${GITHUB_TOKEN}"
                             bat(
