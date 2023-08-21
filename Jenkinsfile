@@ -238,7 +238,8 @@ stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
         GH_USERNAME = "KaranChadha10"
-        GH_TOKEN = "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"
+        GH_TOKEN = "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"
+        // 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
     }
 
     steps {
@@ -249,7 +250,7 @@ stage('Upload Results to Github') {
             if (fileExists(sarifFile)) {
                 def command = "codeql github upload-results " +
                               "--repository=KaranChadha10/codeql-analysis " +
-                              "--ref=refs/heads/master " +
+                              "--ref=refs/heads/main " +
                               "--commit=${GIT_COMMIT} " +
                               "--sarif=${sarifFile}"
 
