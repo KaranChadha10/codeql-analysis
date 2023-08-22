@@ -35,10 +35,10 @@ pipeline {
         script {
             def apiUrl = 'https://api.github.com/user'
             
-            withCredentials([(
-                usernamePassword(credentialsId: env.GITHUB_PAT, 
-                                usernameVariable: 'KaranChadha10', 
-                                passwordVariable: 'GH_TOKEN')
+                            withCredentials([(
+                    usernamePassword(credentialsId: env.GITHUB_PAT, 
+                                    usernameVariable: 'KaranChadha10', 
+                                    passwordVariable: 'GH_TOKEN')
                 )]) {
                 //  withCredentials([
                 //     usernamePassword(credentialsId: 'Pat_12', 
@@ -46,11 +46,11 @@ pipeline {
                 //                     passwordVariable: 'GH_TOKEN')
                 // ]) {
                 def response = httpRequest(
-                    url: apiUrl,
-                    httpMode: 'GET',
-                    authenticationType: 'Bearer',
-                    customHeaders: [[name: 'Authorization', value: "Bearer ${PAT}"]]
-                )
+                url: apiUrl,
+                httpMode: 'GET',
+                authenticationType: 'Bearer',
+                customHeaders: [[name: 'Authorization', value: "Bearer ${GH_TOKEN}"]]
+            )
                 echo response
                 echo "Response Content: ${response.content}"
             }
