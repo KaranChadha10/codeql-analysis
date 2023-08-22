@@ -59,8 +59,8 @@ stage('Upload Results to Github') {
 
                 withCredentials([
                     usernamePassword(credentialsId: "pat_12", 
-                                    usernameVariable: "GH_USERNAME", 
-                                    passwordVariable: "GH_TOKEN")
+                                    usernameVariable: 'GH_USERNAME', 
+                                    passwordVariable: 'GH_TOKEN')
                 ]) {
                     echo "Username ${env.GH_USERNAME}"
                     echo "Password: ${env.GH_TOKEN}" 
