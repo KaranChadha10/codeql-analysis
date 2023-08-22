@@ -103,31 +103,29 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
-        // GH_TOKEN = "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"
+        GH_USERNAME = 'KaranChadha10'
+        GH_TOKEN = "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"
     }
 
     steps {
         script {
             echo "CODEQL_PATH: ${env.CODEQL_PATH}" 
+            echo GHUER
             def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
             if (fileExists(sarifFile)) {
-                // def patCheckCommand = "curl -s -w %{http_code} -H \"Authorization: token ${GH_TOKEN}\" https://api.github.com/user"
-                // echo "patCheckCommand: ${patCheckCommand}"
-                // def patCheckResult = bat(script: "cmd /c \"${patCheckCommand}\"", returnStatus: true).trim()
-                // echo "patCheckResult: ${patCheckResult}" //
-
-                // if (patCheckResult == '200') { // Compare as a string, not integer
                     def command = "codeql github upload-results " +
                                   "--repository=KaranChadha10/codeql-analysis " +
                                   "--ref=refs/heads/main " +
                                   "--commit=${GIT_COMMIT} " +
                                   "--sarif=${sarifFile}"
-
+                    withCredentials([
+                    usernamePassword(credentialsId: 'Pat_12', 
+                                    usernameVariable: 'GH_USERNAME', 
+                                    passwordVariable: 'GH_TOKEN')
+                ]) {
                     bat(script: command)
-                // } else {
-                //     error "Invalid PAT: Received ${patCheckResult} Unauthorized"
-                // }
+                }
             } else {
                 echo "SARIF file not found."
             }
