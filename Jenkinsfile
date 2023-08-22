@@ -234,29 +234,37 @@ pipeline {
 //     }
 // }
         stage('GitHub API Call') {
-                    steps {
-                        script {
-                            def apiUrl = 'https://api.github.com/user'
-                            echo apiUrl
-                            def patToken = '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'
-                            echo patToken
-                            def response = httpRequest(
-                                url: apiUrl,
-                                httpMode: 'GET',
-                                authentication: patToken,
-                                customHeaders: [[name: 'Authorization', value: "Bearer ${patToken}"]]
-                            )
-                            echo response
-                            
-                            // if (response.status == 200) {
-                            //     def responseBody = response.content
-                            //     echo "Response: ${responseBody}"
-                            // } else {
-                            //     error "API call failed with status ${response.status}"
-                            // }
-                        }
-                    }
-                }
+            environment {
+            GH_TOKEN = "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"
+        }
+    steps {
+        
+        script {
+            def apiUrl = 'https://api.github.com/user'
+            
+            withCredentials([(
+                usernamePassword(credentialsId: 'Pat_11', 
+                                    usernameVariable: 'KaranChadha10', 
+                                    passwordVariable: 'GH_TOKEN')
+                )]) {
+                //  withCredentials([
+                //     usernamePassword(credentialsId: 'Pat_12', 
+                //                     usernameVariable: 'GH_USERNAME', 
+                //                     passwordVariable: 'GH_TOKEN')
+                // ]) {
+                def response = httpRequest(
+                    url: apiUrl,
+                    httpMode: 'GET',
+                    authenticationType: 'Bearer',
+                    customHeaders: [[name: 'Authorization', value: "Bearer ${PAT}"]]
+                )
+                echo response
+                echo "Response Content: ${response.content}"
+            }
+        }
+    }
+}
+
 // stage('Upload Results to Github') {
 //     environment {
 //         CODEQL_PATH = "$WORKSPACE"
