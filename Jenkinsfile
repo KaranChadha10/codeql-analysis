@@ -33,8 +33,8 @@ pipeline {
     stage('GitHub API Call') {
     steps {
         script {
-            def apiUrl = 'https://jsonplaceholder.typicode.com/posts'
-            def PAT = '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'
+            def apiUrl = 'https://api.github.com/user'
+            def PAT = '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'
 
             def response = httpRequest(
                 url: apiUrl,
