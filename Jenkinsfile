@@ -25,11 +25,11 @@ pipeline {
             }
         }
         stage('GitHub API Call') {
-            environment {
-            // GH_TOKEN = "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"
-            GITHUB_PAT = 'PAT_11' // Use the correct credentials ID here
+        //     environment {
+        //     // GH_TOKEN = "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"
+        //     GITHUB_PAT = 'PAT_11' // Use the correct credentials ID here
 
-        }
+        // }
     steps {
         script {
             def apiUrl = 'https://jsonplaceholder.typicode.com/posts'
