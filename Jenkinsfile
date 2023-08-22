@@ -24,6 +24,37 @@ pipeline {
                                             url: 'https://github.com/KaranChadha10/codeql-analysis.git']]])
             }
         }
+        stage('GitHub API Call') {
+            environment {
+            GH_TOKEN = "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"
+        }
+    steps {
+        
+        script {
+            def apiUrl = 'https://api.github.com/user'
+            
+            withCredentials([(
+                usernamePassword(credentialsId: 'Pat_11', 
+                                    usernameVariable: 'KaranChadha10', 
+                                    passwordVariable: 'GH_TOKEN')
+                )]) {
+                //  withCredentials([
+                //     usernamePassword(credentialsId: 'Pat_12', 
+                //                     usernameVariable: 'GH_USERNAME', 
+                //                     passwordVariable: 'GH_TOKEN')
+                // ]) {
+                def response = httpRequest(
+                    url: apiUrl,
+                    httpMode: 'GET',
+                    authenticationType: 'Bearer',
+                    customHeaders: [[name: 'Authorization', value: "Bearer ${PAT}"]]
+                )
+                echo response
+                echo "Response Content: ${response.content}"
+            }
+        }
+    }
+}
         stage('CodeQL') {
             steps {
                 script {
@@ -233,37 +264,7 @@ pipeline {
 //         }
 //     }
 // }
-        stage('GitHub API Call') {
-            environment {
-            GH_TOKEN = "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"
-        }
-    steps {
         
-        script {
-            def apiUrl = 'https://api.github.com/user'
-            
-            withCredentials([(
-                usernamePassword(credentialsId: 'Pat_11', 
-                                    usernameVariable: 'KaranChadha10', 
-                                    passwordVariable: 'GH_TOKEN')
-                )]) {
-                //  withCredentials([
-                //     usernamePassword(credentialsId: 'Pat_12', 
-                //                     usernameVariable: 'GH_USERNAME', 
-                //                     passwordVariable: 'GH_TOKEN')
-                // ]) {
-                def response = httpRequest(
-                    url: apiUrl,
-                    httpMode: 'GET',
-                    authenticationType: 'Bearer',
-                    customHeaders: [[name: 'Authorization', value: "Bearer ${PAT}"]]
-                )
-                echo response
-                echo "Response Content: ${response.content}"
-            }
-        }
-    }
-}
 
 // stage('Upload Results to Github') {
 //     environment {
