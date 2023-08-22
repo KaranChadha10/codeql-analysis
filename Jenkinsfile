@@ -237,9 +237,7 @@ pipeline {
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
-        GH_USERNAME = "KaranChadha10"
         GH_TOKEN = "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"
-        // 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
     }
 
     steps {
@@ -248,28 +246,18 @@ stage('Upload Results to Github') {
             def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
             if (fileExists(sarifFile)) {
+                // Check PAT validity
                 def patCheckCommand = "curl -s -o /dev/null -w '%{http_code}' -H 'Authorization: token ${GH_TOKEN}' https://api.github.com/user"
                 def patCheckResult = sh(returnStatus: true, script: patCheckCommand).trim()
 
                 if (patCheckResult == '200') {
-                def command = "codeql github upload-results " +
-                              "--repository=KaranChadha10/codeql-analysis " +
-                              "--ref=refs/heads/main " +
-                              "--commit=${GIT_COMMIT} " +
-                              "--sarif=${sarifFile}"
+                    def command = "codeql github upload-results " +
+                                  "--repository=KaranChadha10/codeql-analysis " +
+                                  "--ref=refs/heads/main " +
+                                  "--commit=${GIT_COMMIT} " +
+                                  "--sarif=${sarifFile}"
 
-                withCredentials([
-                    usernamePassword(credentialsId: 'Pat_12', 
-                                    usernameVariable: 'GH_USERNAME', 
-                                    passwordVariable: 'GH_TOKEN')
-                ]) {
-
-                    // Pass environment variables to the withEnv block
-                    withEnv(["GITHUB_USERNAME=${GH_USERNAME}", 
-                             "GITHUB_TOKEN=${GH_TOKEN}"]) {
-                        bat(script: command)
-                    }
-                }
+                    bat(script: command)
                 } else {
                     error "Invalid PAT: Received ${patCheckResult} Unauthorized"
                 }
