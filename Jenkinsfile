@@ -32,14 +32,20 @@ pipeline {
         }
     steps {
         script {
-            def apiUrl = 'https://api.github.com/user'
-            withCredentials([usernamePassword(credentialsId: env.GITHUB_PAT, usernameVariable: 'KaranChadha10', passwordVariable: 'GH_TOKEN')]) {
-                def authHeader = "Bearer ${GH_TOKEN}" // Constructing the Authorization header
-                def response = httpRequest(
-                    url: apiUrl,
-                    httpMode: 'GET',
-                    customHeaders: [[name: 'Authorization', value: authHeader]]
-                )
+            def apiUrl = 'https://jsonplaceholder.typicode.com/posts'
+            def response = httpRequest(
+                        url: apiUrl,
+                        httpMode: 'GET',
+                        // authentication: patToken,
+                        // customHeaders: [[name: 'Authorization', value: "Bearer ${patToken}"]]
+                    )
+            // withCredentials([usernamePassword(credentialsId: env.GITHUB_PAT, usernameVariable: 'KaranChadha10', passwordVariable: 'GH_TOKEN')]) {
+            //     def authHeader = "Bearer ${GH_TOKEN}" // Constructing the Authorization header
+            //     def response = httpRequest(
+            //         url: apiUrl,
+            //         httpMode: 'GET',
+            //         customHeaders: [[name: 'Authorization', value: authHeader]]
+            //     )
                 echo "Response Code: ${response.status}"
                 echo "Response Content: ${response.content}"
             }
