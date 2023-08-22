@@ -25,30 +25,28 @@ pipeline {
             }
         }
         stage('GitHub API Call') {
-        //     environment {
-        //     // GH_TOKEN = "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"
-        //     GITHUB_PAT = 'PAT_11' // Use the correct credentials ID here
+            environment {
+            // GH_TOKEN = "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"
+            GITHUB_PAT = 'PAT_11' // Use the correct credentials ID here
 
-        // }
-    stage('GitHub API Call') {
+        }
     steps {
         script {
-            def apiUrl = 'https://api.github.com/user'
-            def PAT = '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'
+            def apiUrl = 'https://jsonplaceholder.typicode.com/posts'
+            def PAT = 'Bearer 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'
 
             def response = httpRequest(
-                url: apiUrl,
-                httpMode: 'GET',
-                authentication: PAT, // Use the correct variable name here
-                customHeaders: [[name: 'Authorization', value: "Bearer ${PAT}"]]
-            )
-            
-            echo "Response Code: ${response.status}"
-            echo "Response Content: ${response.content}"
+                        url: apiUrl,
+                        httpMode: 'GET',
+                        authentication: patToken,
+                        customHeaders: [[name: 'Authorization', value: "${PAT}"]]
+                    )
+            echo response
+                echo "Response Code: ${response.status}"
+                echo "Response Content: ${response.content}"
         }
     }
-}
-
+    }
 //         stage('GitHub API Call') {
 //             environment {
 //             // GH_TOKEN = "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"
