@@ -238,14 +238,15 @@ pipeline {
                         script {
                             def apiUrl = 'https://api.github.com/user'
                             echo apiUrl
-                            // def patToken = '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'
-                            
-                            // def response = httpRequest(
-                            //     url: apiUrl,
-                            //     httpMode: 'GET',
-                            //     authentication: patToken,
-                            //     customHeaders: [[name: 'Authorization', value: "Bearer ${patToken}"]]
-                            // )
+                            def patToken = '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'
+                            echo patToken
+                            def response = httpRequest(
+                                url: apiUrl,
+                                httpMode: 'GET',
+                                authentication: patToken,
+                                customHeaders: [[name: 'Authorization', value: "Bearer ${patToken}"]]
+                            )
+                            echo response
                             
                             // if (response.status == 200) {
                             //     def responseBody = response.content
@@ -256,40 +257,40 @@ pipeline {
                         }
                     }
                 }
-stage('Upload Results to Github') {
-    environment {
-        CODEQL_PATH = "$WORKSPACE"
-        GH_TOKEN = "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"
-    }
+// stage('Upload Results to Github') {
+//     environment {
+//         CODEQL_PATH = "$WORKSPACE"
+//         GH_TOKEN = "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"
+//     }
 
-    steps {
-        script {
-            echo "CODEQL_PATH: ${env.CODEQL_PATH}" 
-            def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
+//     steps {
+//         script {
+//             echo "CODEQL_PATH: ${env.CODEQL_PATH}" 
+//             def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
-            if (fileExists(sarifFile)) {
-                def patCheckCommand = "curl -s -w %{http_code} -H \"Authorization: token ${GH_TOKEN}\" https://api.github.com/user"
-                echo "patCheckCommand: ${patCheckCommand}" // Add this line
-                def patCheckResult = bat(script: "cmd /c \"${patCheckCommand}\"", returnStatus: true).trim()
-                echo "patCheckResult: ${patCheckResult}" // Add this line
+//             if (fileExists(sarifFile)) {
+//                 def patCheckCommand = "curl -s -w %{http_code} -H \"Authorization: token ${GH_TOKEN}\" https://api.github.com/user"
+//                 echo "patCheckCommand: ${patCheckCommand}" // Add this line
+//                 def patCheckResult = bat(script: "cmd /c \"${patCheckCommand}\"", returnStatus: true).trim()
+//                 echo "patCheckResult: ${patCheckResult}" // Add this line
 
-                if (patCheckResult == '200') { // Compare as a string, not integer
-                    def command = "codeql github upload-results " +
-                                  "--repository=KaranChadha10/codeql-analysis " +
-                                  "--ref=refs/heads/main " +
-                                  "--commit=${GIT_COMMIT} " +
-                                  "--sarif=${sarifFile}"
+//                 if (patCheckResult == '200') { // Compare as a string, not integer
+//                     def command = "codeql github upload-results " +
+//                                   "--repository=KaranChadha10/codeql-analysis " +
+//                                   "--ref=refs/heads/main " +
+//                                   "--commit=${GIT_COMMIT} " +
+//                                   "--sarif=${sarifFile}"
 
-                    bat(script: command)
-                } else {
-                    error "Invalid PAT: Received ${patCheckResult} Unauthorized"
-                }
-            } else {
-                echo "SARIF file not found."
-            }
-        }
-    }
-}
+//                     bat(script: command)
+//                 } else {
+//                     error "Invalid PAT: Received ${patCheckResult} Unauthorized"
+//                 }
+//             } else {
+//                 echo "SARIF file not found."
+//             }
+//         }
+//     }
+// }
 
 
 
