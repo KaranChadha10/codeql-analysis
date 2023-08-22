@@ -238,7 +238,7 @@ pipeline {
                         script {
                             def apiUrl = 'https://api.github.com/user'
                             echo apiUrl
-                            def patToken = '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'
+                            def patToken = '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'
                             echo patToken
                             def response = httpRequest(
                                 url: apiUrl,
