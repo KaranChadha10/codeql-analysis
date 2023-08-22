@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GITHUB_PAT = 'Pat_12'
+        GITHUB_PAT = 'Pat_11'
     }
 
     stages {
@@ -34,7 +34,7 @@ pipeline {
             def apiUrl = 'https://api.github.com/user'
             
             withCredentials([(
-                usernamePassword(credentialsId: 'Pat_11', 
+                usernamePassword(credentialsId: env.GITHUB_PAT, 
                                     usernameVariable: 'KaranChadha10', 
                                     passwordVariable: 'GH_TOKEN')
                 )]) {
