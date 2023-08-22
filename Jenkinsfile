@@ -247,6 +247,7 @@ stage('Upload Results to Github') {
             
             if (fileExists(sarifFile)) {
                 def patCheckCommand = "curl -s -o NUL -w %{http_code} -H \"Authorization: token ${GH_TOKEN}\" https://api.github.com/user"
+                echo "patCheckCommand: ${patCheckCommand}" // Add this line
                 def patCheckResult = bat(script: "cmd /c \"${patCheckCommand}\"", returnStatus: true).trim()
                 echo "patCheckResult: ${patCheckResult}" // Add this line
                 def responseCode = patCheckResult.replaceAll("\\D", "")
