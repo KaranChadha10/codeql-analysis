@@ -248,6 +248,10 @@ stage('Upload Results to Github') {
             def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
             if (fileExists(sarifFile)) {
+                def patCheckCommand = "curl -s -o /dev/null -w '%{http_code}' -H 'Authorization: token ${GH_TOKEN}' https://api.github.com/user"
+                def patCheckResult = sh(returnStatus: true, script: patCheckCommand).trim()
+
+                if (patCheckResult == '200') {
                 def command = "codeql github upload-results " +
                               "--repository=KaranChadha10/codeql-analysis " +
                               "--ref=refs/heads/main " +
@@ -265,6 +269,9 @@ stage('Upload Results to Github') {
                              "GITHUB_TOKEN=${GH_TOKEN}"]) {
                         bat(script: command)
                     }
+                }
+                } else {
+                    error "Invalid PAT: Received ${patCheckResult} Unauthorized"
                 }
             } else {
                 echo "SARIF file not found."
