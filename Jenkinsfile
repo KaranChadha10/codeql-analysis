@@ -33,13 +33,12 @@ pipeline {
     steps {
         script {
             def apiUrl = 'https://api.github.com/user'
-
             withCredentials([usernamePassword(credentialsId: env.GITHUB_PAT, usernameVariable: 'KaranChadha10', passwordVariable: 'GH_TOKEN')]) {
+                def authHeader = "Bearer ${GH_TOKEN}" // Constructing the Authorization header
                 def response = httpRequest(
                     url: apiUrl,
                     httpMode: 'GET',
-                    authentication: 'Bearer',
-                    customHeaders: [[name: 'Authorization', value: "Bearer " + GH_TOKEN]]
+                    customHeaders: [[name: 'Authorization', value: authHeader]]
                 )
                 echo "Response Code: ${response.status}"
                 echo "Response Content: ${response.content}"
