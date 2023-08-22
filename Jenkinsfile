@@ -248,7 +248,7 @@ stage('Upload Results to Github') {
             if (fileExists(sarifFile)) {
                 // Check PAT validity
                 def patCheckCommand = "curl -s -o /dev/null -w '%{http_code}' -H 'Authorization: token ${GH_TOKEN}' https://api.github.com/user"
-                def patCheckResult = sh(returnStatus: true, script: patCheckCommand).trim()
+                def patCheckResult = bat(script: "cmd /c \"${patCheckCommand}\"", returnStatus: true).trim()
 
                 if (patCheckResult == '200') {
                     def command = "codeql github upload-results " +
