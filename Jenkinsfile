@@ -53,7 +53,7 @@ stage('Upload Results to Github') {
             if (fileExists(sarifFile)) {
                 def command = "codeql github upload-results " +
                               "--repository=KaranChadha10/codeql-analysis " +
-                              "--ref=refs/heads/main " +
+                              "--ref=refs/heads/master " +
                               "--commit=${GIT_COMMIT} " +
                               "--sarif=${sarifFile}"
 
