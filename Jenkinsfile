@@ -233,7 +233,28 @@ pipeline {
 //         }
 //     }
 // }
-
+        stage('GitHub API Call') {
+                    steps {
+                        script {
+                            def apiUrl = 'https://api.github.com/user'
+                            def patToken = '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'
+                            
+                            def response = httpRequest(
+                                url: apiUrl,
+                                httpMode: 'GET',
+                                authentication: patToken,
+                                customHeaders: [[name: 'Authorization', value: "Bearer ${patToken}"]]
+                            )
+                            
+                            if (response.status == 200) {
+                                def responseBody = response.content
+                                echo "Response: ${responseBody}"
+                            } else {
+                                error "API call failed with status ${response.status}"
+                            }
+                        }
+                    }
+                }
 stage('Upload Results to Github') {
     environment {
         CODEQL_PATH = "$WORKSPACE"
