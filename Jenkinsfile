@@ -38,8 +38,8 @@ pipeline {
                 def response = httpRequest(
                     url: apiUrl,
                     httpMode: 'GET',
-                    authentication: 'Basic',
-                    customHeaders: [[name: 'Authorization', value: "Basic " + GH_TOKEN]]
+                    authentication: 'Bearer',
+                    customHeaders: [[name: 'Authorization', value: "Bearer " + GH_TOKEN]]
                 )
                 echo "Response Code: ${response.status}"
                 echo "Response Content: ${response.content}"
