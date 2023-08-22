@@ -35,7 +35,7 @@ pipeline {
             def apiUrl = 'https://jsonplaceholder.typicode.com/posts'
             def response = httpRequest(
                         url: apiUrl,
-                        httpMode: 'GET',
+                        httpMode: 'GET'
                         // authentication: patToken,
                         // customHeaders: [[name: 'Authorization', value: "Bearer ${patToken}"]]
                     )
@@ -48,7 +48,7 @@ pipeline {
             //     )
                 echo "Response Code: ${response.status}"
                 echo "Response Content: ${response.content}"
-            }
+            // }
         }
     }
     }
