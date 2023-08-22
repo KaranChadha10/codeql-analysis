@@ -26,7 +26,9 @@ pipeline {
         }
         stage('GitHub API Call') {
             environment {
-            GH_TOKEN = "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"
+            // GH_TOKEN = "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"
+            GITHUB_PAT = 'PAT_11' // Use the correct credentials ID here
+
         }
     steps {
         
@@ -35,8 +37,8 @@ pipeline {
             
             withCredentials([(
                 usernamePassword(credentialsId: env.GITHUB_PAT, 
-                                    usernameVariable: 'KaranChadha10', 
-                                    passwordVariable: 'GH_TOKEN')
+                                usernameVariable: 'KaranChadha10', 
+                                passwordVariable: 'GH_TOKEN')
                 )]) {
                 //  withCredentials([
                 //     usernamePassword(credentialsId: 'Pat_12', 
