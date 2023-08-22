@@ -62,7 +62,8 @@ stage('Upload Results to Github') {
                                     usernameVariable: "GH_USERNAME", 
                                     passwordVariable: "GH_TOKEN")
                 ]) {
-
+                    echo "Username ${env.GH_USERNAME}"
+                    echo "Password: ${env.GH_TOKEN}" 
                     // Pass environment variables to the withEnv block
                     withEnv(["GITHUB_USERNAME=${env.GH_USERNAME}", 
                              "GITHUB_TOKEN=${env.GH_TOKEN}"]) {
