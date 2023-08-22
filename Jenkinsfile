@@ -53,6 +53,12 @@ pipeline {
             )
                 echo response
                 echo "Response Content: ${response.content}"
+                    if (response.status == 200) {
+                    def responseBody = response.content
+                    echo "Response Content: ${responseBody}"
+                } else {
+                    error "API call failed with status ${response.status}"
+                }
             }
         }
     }
