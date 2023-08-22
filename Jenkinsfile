@@ -246,13 +246,13 @@ stage('Upload Results to Github') {
             def sarifFile = "${CODEQL_PATH}/codeql-results.sarif"
             
             if (fileExists(sarifFile)) {
-                // Check PAT validity
-                // def patCheckCommand = "curl -s -o /dev/null -w '%{http_code}' -H 'Authorization: token ${GH_TOKEN}' https://api.github.com/user"
                 def patCheckCommand = "curl -s -o NUL -w %{http_code} -H \"Authorization: token ${GH_TOKEN}\" https://api.github.com/user"
                 def patCheckResult = bat(script: "cmd /c \"${patCheckCommand}\"", returnStatus: true).trim()
+                echo "patCheckResult: ${patCheckResult}" // Add this line
                 def responseCode = patCheckResult.replaceAll("\\D", "")
+                echo "responseCode: ${responseCode}" // Add this line
 
-                    if (responseCode == '200') {
+                if (responseCode == '200') {
                     def command = "codeql github upload-results " +
                                   "--repository=KaranChadha10/codeql-analysis " +
                                   "--ref=refs/heads/main " +
@@ -266,8 +266,8 @@ stage('Upload Results to Github') {
             } else {
                 echo "SARIF file not found."
             }
-        }
-    }
+                    }
+                }
 }
 
 
