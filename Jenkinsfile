@@ -84,38 +84,38 @@ pipeline {
             }
         }
 
-        stage('Upload Results to Github') {
-                    environment {
-                        CODEQL_PATH = "${WORKSPACE}\\codeql"
-                        GH_USERNAME = "jtripade_jcplc"  // Your GitHub username
-                        GH_TOKEN = "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"  // Your GitHub personal access token
+        // stage('Upload Results to Github') {
+        //             environment {
+        //                 CODEQL_PATH = "${WORKSPACE}\\codeql"
+        //                 GH_USERNAME = "jtripade_jcplc"  // Your GitHub username
+        //                 GH_TOKEN = "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"  // Your GitHub personal access token
 
-                    }
-                    steps {
-                        script {
-                            def sarifFile = "${CODEQL_PATH}\\codeql-db\\results-js.sarif"
-                            if (fileExists(sarifFile)) {
-                                def command = "${CODEQL_PATH}\\codeql github upload-results " +
-                                    "--github-url=https://api.github.com " +
-                                    "--repository=${OWNER_REPO_NAME} " +
-                                    "--ref=refs/heads/${BRANCH_TO_SCAN} " +
-                                    "--commit=${GIT_COMMIT} " +
-                                    "--sarif=${sarifFile}"
+        //             }
+        //             steps {
+        //                 script {
+        //                     def sarifFile = "${CODEQL_PATH}\\codeql-db\\results-js.sarif"
+        //                     if (fileExists(sarifFile)) {
+        //                         def command = "${CODEQL_PATH}\\codeql github upload-results " +
+        //                             "--github-url=https://api.github.com " +
+        //                             "--repository=${OWNER_REPO_NAME} " +
+        //                             "--ref=refs/heads/${BRANCH_TO_SCAN} " +
+        //                             "--commit=${GIT_COMMIT} " +
+        //                             "--sarif=${sarifFile}"
 
-                                withCredentials([usernamePassword(credentialsId: env.JCI_GHEMU_CRED,
-                                            usernameVariable: 'GHUSER',
-                                            passwordVariable: 'GHTOKEN')]) {
-                                    def authHeaderValue = "Bearer ${env.GH_TOKEN}"  // Use GH_TOKEN here
-                                    withEnv(["GITHUB_USERNAME=${env.GH_USERNAME}", 
-                                            "GITHUB_TOKEN=${env.GH_TOKEN}"]) {
-                                        bat(script: command, returnStatus: true, env: [GITHUB_AUTH: authHeaderValue])
-                                    }
-                                }
-                            } else {
-                                echo "SARIF file not found."
-                            }
-                        }
-                    }
-                }
+        //                         withCredentials([usernamePassword(credentialsId: env.JCI_GHEMU_CRED,
+        //                                     usernameVariable: 'GHUSER',
+        //                                     passwordVariable: 'GHTOKEN')]) {
+        //                             def authHeaderValue = "Bearer ${env.GH_TOKEN}"  // Use GH_TOKEN here
+        //                             withEnv(["GITHUB_USERNAME=${env.GH_USERNAME}", 
+        //                                     "GITHUB_TOKEN=${env.GH_TOKEN}"]) {
+        //                                 bat(script: command, returnStatus: true, env: [GITHUB_AUTH: authHeaderValue])
+        //                             }
+        //                         }
+        //                     } else {
+        //                         echo "SARIF file not found."
+        //                     }
+        //                 }
+        //             }
+        //         }
     }
 }
